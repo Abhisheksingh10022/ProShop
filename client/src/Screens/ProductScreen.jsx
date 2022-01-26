@@ -1,12 +1,23 @@
-import React from "react";
+import React ,{useState,useEffect} from "react";
 import {Link} from "react-router-dom";
 import {Row,Col,Image,ListGroup,Card,Button} from "react-bootstrap";
 import Rating from "../Components/Rating";
-import products from "../products"
 import { useParams } from "react-router-dom";
-const ProductScreen=({match})=>{
-    const {_id}=useParams();
-  const product=products.find((p)=>p._id===_id)
+import axios from "axios";
+
+const ProductScreen=({})=>{
+   const {_id}=useParams();
+   console.log(_id);
+    const[product ,setProduct]=useState({});
+useEffect(()=>{
+const fetchproduct=async()=>{
+   const {data}=await axios.get(`/api/products/${_id}`);
+   setProduct(data);
+}
+fetchproduct();
+},[]);
+  
+  
 return(
     <>
     <Link className="btn btn-light" to="/">Go Back</Link>
@@ -56,5 +67,6 @@ return(
     </Row>
     </>
 );
+
 }
 export default ProductScreen;

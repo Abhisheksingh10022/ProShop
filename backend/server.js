@@ -1,7 +1,11 @@
-const express=require('express');
-const app =express();
-const products=require("./Data/products");
+import express from "express";
+import dotenv from "dotenv";
+import products from "./Data/products.js";
+import connectDB from "./config/DB.js"
+dotenv.config();
 
+connectDB();
+const app =express();
 app.get("/",(req,res)=>{
    res.send("running");
 });
@@ -20,5 +24,5 @@ if(p._id===pq)
 )
 
 });
- 
-app.listen(5000,console.log('server running on port 5000'))
+ const PORT=process.env.PORT;
+app.listen(PORT,console.log(`server running in ${process.env.NODE_ENV} on port ${PORT}`))

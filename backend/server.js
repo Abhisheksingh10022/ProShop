@@ -4,7 +4,7 @@ import products from "./Data/products.js";
 import connectDB from "./config/DB.js"
 dotenv.config();
 
-connectDB();
+connectDB();//connecting mongodb
 const app =express();
 app.get("/",(req,res)=>{
    res.send("running");

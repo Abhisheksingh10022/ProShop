@@ -26,3 +26,4 @@ else{
     res.status(404).json({message:'product not found'})
 }
 }));
+export default router;

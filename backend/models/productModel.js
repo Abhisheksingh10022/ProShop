@@ -1,5 +1,5 @@
-import { Mongoose } from "mongoose";
- const reviewSchema=Mongoose.schema({
+import  Mongoose  from "mongoose";
+ const reviewSchema=Mongoose.Schema({
      name:{type:String,required:true},
      rating:{type:Number,required:true},
      comment:{type:String,required:true}
@@ -27,7 +27,7 @@ const productSchema=Mongoose.Schema({
                 required:true
                   },
                   category:{
-                      type:Boolean,
+                      type:String,
                       required:true,
                   },
                   description:{

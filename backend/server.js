@@ -2,7 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import products from "./Data/products.js";
 import connectDB from "./config/DB.js";
-import ProductRouters from "./Routers/ProductRouters.js"
+import ProductRouters from "./Routers/ProductRouters.js";
+import{NotFound,ErrorHandler} from "./Middlewares/errorMiddlewares.js"
 dotenv.config();
 
 connectDB();//connecting mongodb
@@ -12,6 +13,11 @@ app.get("/",(req,res)=>{
 });
 
 app.use("/api/products",ProductRouters);
+
+app.use(NotFound);
+app.use(ErrorHandler);
+
+
 
  const PORT=process.env.PORT;
 app.listen(PORT,console.log(`server running in ${process.env.NODE_ENV} on port ${PORT}`))

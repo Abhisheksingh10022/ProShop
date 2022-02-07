@@ -1,20 +1,21 @@
-import React,{useState,useEffect} from "react";
-import{Container,Row,Col} from "react-bootstrap"
+import React,{useEffect} from "react";
+import{Row,Col} from "react-bootstrap";
+import {useDispatch,useSelector} from "react-redux"
 import Product from "../Components/Product";
-import axios from 'axios';
+import { ListProducts } from "../Actions/ProductActions";
 const HomeScreen=()=>{
-    const[products,setProducts]=useState([]);
-
+  const dispatch=useDispatch();
+  const productList=useSelector((state)=>state.productList);
+  const{loading,error,products}=productList;
     useEffect(()=>{
-     const fetchproduct=async ()=>{
-         const {data}=await axios.get('/api/products');
-     setProducts(data)
-     }
-     fetchproduct();
-    },[]);
+   dispatch(ListProducts())
+    },[dispatch]);
+
     return(
         <>
         <h1>Latest products</h1>
+        {
+            loading?<h2>Loading...</h2>:error?<h3>{error}</h3>:
         <Row>
             {
                 products.map((product)=>{
@@ -26,6 +27,7 @@ const HomeScreen=()=>{
                 })
             }
         </Row>
+}
         </>
     )
 }

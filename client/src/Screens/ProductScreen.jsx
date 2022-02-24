@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { ListProductDetails } from "../Actions/ProductActions";
 
 const ProductScreen=({history})=>{
-const [qty,setQty]=useState(0);
+const [qty,setQty]=useState(1);
 
     const dispatch=useDispatch();
     const productDetails=useSelector((state)=>state.productDetails)
@@ -21,11 +21,7 @@ useEffect(()=>{
 dispatch(ListProductDetails(_id))
 },[dispatch,_id]);
   
-const addToCartHandler=()=>{
-/*history.push(`/cart/${_id}?qty=${qty}`);*/
-
-<Link className="btn btn-light" to={`/cart/${_id}?qty=${qty}`} />
-}
+console.log({product});
 
 return(
     <>
@@ -67,7 +63,7 @@ return(
                     </Row>
                 </ListGroup.Item>
                {
-  
+   
                      (  product.countInStock>0&&<ListGroup.Item>
                    <Row>
                        <Col>QTY</Col>
@@ -88,8 +84,7 @@ return(
                }  
             </ListGroup>
             <ListGroup.Item>
-                <Link to={`/cart/${_id}`}>
-  
+                <Link to={`/cart/${_id}?qty=${qty}`}>
                 <Button 
                 className="btn-block" type="button"  >
                     Add to Cart

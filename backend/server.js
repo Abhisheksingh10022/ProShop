@@ -2,8 +2,11 @@ import express from "express";
 import dotenv from "dotenv";
 import products from "./Data/products.js";
 import connectDB from "./config/DB.js";
-import ProductRouters from "./Routers/ProductRouters.js";
-import{NotFound,ErrorHandler} from "./Middlewares/errorMiddlewares.js"
+import ProductRouters from "./Routes/ProductRouters.js";
+import{NotFound,ErrorHandler} from "./Middlewares/errorMiddlewares.js";
+import userRoutes from"./Routes/userRoutes.js"
+
+
 dotenv.config();
 
 connectDB();//connecting mongodb
@@ -11,8 +14,10 @@ const app =express();
 app.get("/",(req,res)=>{
    res.send("running");
 });
+app.use(express.json());
 
 app.use("/api/products",ProductRouters);
+app.use("/api/users",userRoutes);
 
 app.use(NotFound);
 app.use(ErrorHandler);

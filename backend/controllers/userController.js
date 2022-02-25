@@ -1,5 +1,6 @@
 import AsyncHandler from "express-async-handler";
 import UserModel from "../models/userModel.js"
+import generatewebtoken from "../utils/generatetoken.js";
 const AuthUser=AsyncHandler(async(req,res)=>{
 const {email,password}=req.body
   const User =await UserModel.findOne({email});
@@ -11,7 +12,7 @@ const {email,password}=req.body
         name:User.name,
         email:User.email,
         isAdmin:User.isAdmin,
-        token:null
+        token:generatewebtoken(User._id)
     })
   }
   else{

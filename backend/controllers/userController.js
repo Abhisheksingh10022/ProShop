@@ -1,6 +1,11 @@
 import AsyncHandler from "express-async-handler";
+import User from "../models/userModel.js";
 import UserModel from "../models/userModel.js"
 import generatewebtoken from "../utils/generatetoken.js";
+
+//@dec   Auth user &get token
+//@route posy/api/users/login
+//@access public
 const AuthUser=AsyncHandler(async(req,res)=>{
 const {email,password}=req.body
   const User =await UserModel.findOne({email});
@@ -20,5 +25,25 @@ const {email,password}=req.body
      throw new Error('Invalid email or password')
   }
 })
+//@desc  get user profile
+//route Post /api/users/profile
+//@acess private
+const getUserProfile=AsyncHandler(async(req,res)=>{
+    const user=await User.findById(req.user._id)
+    
+    if(user)
+    {
+      res.json({
+        _id:user._id,
+        name:user.name,
+        email:user.email,
+        isAdmin:user.isAdmin,
+      })
+    }
+    else{
+      res.status(404)
+      throw new Error('user not found')
+    }
+    })
 
-export default AuthUser;
+export {AuthUser,getUserProfile}

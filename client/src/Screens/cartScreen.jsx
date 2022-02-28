@@ -10,7 +10,7 @@ const productId=_id;
 
 const queryParams=new URLSearchParams(window.location.search);
 
-const qty=queryParams.get("qty");
+const qty=queryParams.get("qty");//getting query params from url
 
 const dispatch=useDispatch();
 const cart=useSelector(state=>state.cart);

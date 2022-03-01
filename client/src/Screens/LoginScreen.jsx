@@ -17,14 +17,12 @@ import Loader from "../Components/loader";
   const {loading,error,userInfo}=userLogin;
    const navigate=useNavigate();
    useEffect(()=>{
-     console.log(userInfo);
+   
      if(userInfo)
-     {console.log(12);
+     {
      navigate("/")
      }
-     else{
-      
-     }
+     
      
    })  
     const submitHandler=(e)=>{

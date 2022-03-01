@@ -1,4 +1,4 @@
-import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS } from "../Constants/userConstants"
+import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS,USER_LOGOUT } from "../Constants/userConstants"
 import axios from 'axios';
 export const login =(email,password)=>async(dispatch)=>{
     try{
@@ -11,7 +11,6 @@ const config={
     }
 }
 const {data}=await axios.post('api/users/login',{email,password},config);
-
 dispatch({
     type:USER_LOGIN_SUCCESS,
     payload:data
@@ -27,4 +26,8 @@ localStorage.setItem('userInfo',JSON.stringify(data));
             :error.message
         })
     }
+}
+export const logout=()=>(dispatch)=>{
+    localStorage.removeItem('userInfo');
+    dispatch({type:USER_LOGOUT})
 }

@@ -16,5 +16,6 @@ dispatch({
         qty
     }
 })
+console.log(getState().cart.cartItems);
 localStorage.setItem('cartItems',JSON.stringify(getState().cart.cartItems))
 }

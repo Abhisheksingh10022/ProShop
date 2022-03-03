@@ -4,7 +4,16 @@ import {LinkContainer} from "react-router-bootstrap";
 import{Container,Row,Col,Navbar,Nav, NavDropdown} from "react-bootstrap";
 import { logout } from "../Actions/userActions";
 const Header=()=>{
+const dispatch=useDispatch()
+const userLogin=useSelector(state=>state.userLogin);
+const userInfo=userLogin.userInfo;
+console.log(userLogin);
 
+const logoutHandler=()=>{
+  window.location.reload();
+  dispatch(logout());
+
+}
     return(
         <>
       <header>
@@ -20,12 +29,21 @@ const Header=()=>{
         <Nav.Link ><i className="fas fa-shopping-cart"></i>Cart</Nav.Link>
         </LinkContainer>
      
-       
-       
+       { 
+          userInfo?
+          (
+          <NavDropdown  title={userInfo.name}>
+            <LinkContainer to="/profile">
+              <NavDropdown.Item>profile</NavDropdown.Item>
+            </LinkContainer>
+            <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+          </NavDropdown>
+          ):
           <LinkContainer to="/login">
         <Nav.Link><i className="fas fa-user"></i>Sign In</Nav.Link>
         </LinkContainer>
-
+          
+}
       </Nav>
     </Navbar.Collapse>
   </Container>

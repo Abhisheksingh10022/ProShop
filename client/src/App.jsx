@@ -9,7 +9,7 @@ import ProductScreen from "./Screens/ProductScreen";
 import CartScreen from "./Screens/cartScreen";
 import LoginScreen from "./Screens/LoginScreen";
 const App=()=> {
-  console.log(<Header />);
+  
   return (
    <>
    <Header />

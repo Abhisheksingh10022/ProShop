@@ -45,6 +45,34 @@ const getUserProfile=AsyncHandler(async(req,res)=>{
       throw new Error('user not found')
     }
     })
+    //@desc  update user profile
+//route Put /api/users/profile
+//@acess private
+const updateUserProfile=AsyncHandler(async(req,res)=>{
+  const user=await User.findById(req.user._id)
+  console.log("abhi")
+  if(user)
+  {
+    user.name=req.body.name||user.name
+    user.email=req.body.email||user.email
+    if(req.body.password)
+    {
+      user.password=req.body.password
+    }
+    const updatedUser=await user.save();
+    res.json({
+      _id:updatedUser._id,
+      name:updatedUser.name,
+      email:updatedUser.email,
+      isAdmin:updatedUser.isAdmin,
+      token:generatewebtoken(updatedUser._id)
+  })
+  }
+  else{
+    res.status(404)
+    throw new Error('user not found')
+  }
+  })
 //@desc create new user
 //@route post/api/users
 //@acess public
@@ -76,4 +104,4 @@ const getUserProfile=AsyncHandler(async(req,res)=>{
         }
       })
 
-export {AuthUser,getUserProfile,registerUser}
+export {AuthUser,getUserProfile,registerUser,updateUserProfile}

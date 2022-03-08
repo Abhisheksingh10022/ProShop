@@ -25,7 +25,7 @@ const logoutHandler=()=>{
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
     <Navbar.Collapse id="basic-navbar-nav">
       <Nav className="me-auto">
-        <LinkContainer to="/cart">
+        <LinkContainer to="/cart/:_id">
         <Nav.Link ><i className="fas fa-shopping-cart"></i>Cart</Nav.Link>
         </LinkContainer>
      

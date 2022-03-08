@@ -21,7 +21,6 @@ useEffect(()=>{
 dispatch(ListProductDetails(_id))
 },[dispatch,_id]);
   
-console.log({product});
 
 return(
     <>
@@ -58,20 +57,20 @@ return(
                     <Row>
                         <Col>status:</Col>
                         <Col>
-                        {product.countInStock>0?"In stock":"out of stock"}
+                        {product.countinstock>0?"In stock":"out of stock"}
                         </Col>
                     </Row>
                 </ListGroup.Item>
                {
    
-                     (  product.countInStock>0&&<ListGroup.Item>
+                     (  (product.countinstock>0)&&<ListGroup.Item>
                    <Row>
                        <Col>QTY</Col>
                        <Col>
-                      <Form.Control as='select' value={qty} onchange={(e)=>
+                      <Form.Control as='select' value={qty} onChange={(e)=>
                       setQty(e.target.value)}>
                      {
-                          [...Array(product.countInStock).keys()].map((x) =>(
+                          [...Array(product.countinstock).keys()].map((x) =>(
                           <option key={x+1} value={x+1}>{x+1}</option>
                           ))
                        }

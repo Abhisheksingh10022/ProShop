@@ -53,8 +53,7 @@ const productSchema=Mongoose.Schema({
                     countinstock:{
                         type:Number,
                         required:true,
-                        default:1
-                       
+                        default:10
                         }
                 },{
                       timestamps:true

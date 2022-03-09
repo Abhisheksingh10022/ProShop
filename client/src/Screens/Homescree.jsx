@@ -1,18 +1,27 @@
 import React,{useEffect} from "react";
 import{Row,Col} from "react-bootstrap";
 import {useDispatch,useSelector} from "react-redux";
+import{useNavigate} from "react-router-dom"
 import Loader from "../Components/loader";
 import Message from "../Components/Message";
 import Product from "../Components/Product";
 import { ListProducts } from "../Actions/ProductActions";
 const HomeScreen=()=>{
+
+    const queryParams=new URLSearchParams(window.location.search);
+
+    const shipping=queryParams.get("shipping");
   const dispatch=useDispatch();
+  const navigate=useNavigate();
   const productList=useSelector((state)=>state.productList);
   const{loading,error,products}=productList;
     useEffect(()=>{
    dispatch(ListProducts())
-   
-    },[dispatch]);
+   if(shipping)
+   {
+    navigate("/shipping");
+   }
+    },[dispatch,navigate]);
 
     return(
         <>

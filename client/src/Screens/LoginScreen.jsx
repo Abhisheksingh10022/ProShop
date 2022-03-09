@@ -7,7 +7,9 @@ import {FormContainer} from '../Components/FormContainer';
 import Loader from "../Components/loader";
 
   const LoginScreen=()=>{
-    
+    const queryParams=new URLSearchParams(window.location.search);
+
+const shipping=queryParams.get("shipping");//getting query params from url
    const [email,setEmail]=useState('');
 
     const[password,setPassword]=useState('');
@@ -16,15 +18,23 @@ import Loader from "../Components/loader";
 
   const {loading,error,userInfo}=userLogin;
    const navigate=useNavigate();
+  
    useEffect(()=>{
-   
+  
      if(userInfo)
-     {
-     navigate("/")
+     {console.log(shipping)
+       if(shipping)
+       {console.log(shipping)
+     navigate("/?shipping=true")
+       }
+       else{
+         navigate("/");
+       }
      }
-     
-     
-   })  
+    
+  
+   },[navigate])
+   
     const submitHandler=(e)=>{
         e.preventDefault();
         dispatch(login(email,password))

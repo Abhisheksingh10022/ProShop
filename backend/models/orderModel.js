@@ -6,7 +6,7 @@ const orderSchema=Mongoose.Schema({
         required:true,
         ref:'User'
           },
-        orderitems:[{
+        orderItems:[{
             name:{type:String,required:true},
             qty:{type:Number,required:true},
             image:{type:String,requird:true},
@@ -17,13 +17,13 @@ const orderSchema=Mongoose.Schema({
                 ref:'product'
             }
         }],
-        shippingaddress:{
+        shippingAddress:{
          address:{type:String,required:true},
          city:{type:String,requird:true},
          postalcode:{type:String,requird:true},
          country:{type:String,required:true}
         },
-        paymentmethod:{
+        paymentMethod:{
             type:String,
             requied:true
         },
@@ -33,17 +33,17 @@ const orderSchema=Mongoose.Schema({
             updatetime:{type:String},
             emailaddress:{type:String}
         },
-        taxprice:{
+        taxPrice:{
            type:Number,
-           required:true,
+          
            default:0.0, 
         },
-        shippingprice:{
+        shippingPrice:{
             type:Number,
-            required:true,
+           required:true,
             default:0.0, 
          },
-         totalprice:{
+         totalPrice:{
             type:Number,
             required:true,
             default:0.0, 
@@ -58,7 +58,7 @@ const orderSchema=Mongoose.Schema({
          },
          isdelivered:{
              type:Boolean,
-             required:true,
+            
              default:false
          },
          deliveredat:{

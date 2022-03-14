@@ -4,7 +4,8 @@ import products from "./Data/products.js";
 import connectDB from "./config/DB.js";
 import ProductRouters from "./Routes/ProductRouters.js";
 import{NotFound,ErrorHandler} from "./Middlewares/errorMiddlewares.js";
-import userRoutes from"./Routes/userRoutes.js"
+import userRoutes from"./Routes/userRoutes.js";
+import orderRoutes from "./Routes/orderRoutes.js";
 
 
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use("/api/products",ProductRouters);
 app.use("/api/users",userRoutes);
+app.use("/api/orders",orderRoutes)
 
 app.use(NotFound);
 app.use(ErrorHandler);

@@ -1,21 +1,31 @@
-import React,{useEffect} from "react";
+import React,{useEffect,useState} from "react";
 import {Button,Row,Col,ListGroup,Image,Card} from "react-bootstrap";
 import {useDispatch,useSelector} from "react-redux";
 import Message from "../Components/Message";
+import {PayPalButton} from "react-paypal-button-v2"
 import { Link,useParams } from "react-router-dom";
-import { getOrderDetail } from "../Actions/orderActions";
+import { getOrderDetail, payOrder } from "../Actions/orderActions";
 import Loader from "../Components/loader";
-
+import { ORDER_PAY_RESET } from "../Constants/orderConstants";
+import axios from "axios";
 
 const OrderScreen=()=>{
    const dispatch=useDispatch();
 
   const{id}=useParams();
   console.log(id)
+
+  const [sdkReady,setSdkReady]=useState(false)
+
+
   const  orderDetail=useSelector((state)=>state.orderDetail)
-   const {order}=orderDetail;
+   const {order}=orderDetail;  
 const {Loading}=orderDetail;
-  console.log(order)
+ 
+const  orderPay=useSelector((state)=>state.orderPay)
+const {loading:loadingPay}=orderPay;
+const {success:successPay}=orderPay
+
    if(!Loading)
    {
   const addDecimals=(num)=>{
@@ -25,11 +35,41 @@ const {Loading}=orderDetail;
 order.itemsPrice=addDecimals(order.orderItems.reduce((acc,item)=>acc+item.price*item.qty,0))
    }
 
-
-
    useEffect(()=>{
-      dispatch(getOrderDetail(id));
-   },[dispatch,id])
+       const addPayPalScript=async()=>{
+           const {data:clientId}=await axios.get('/api/config/paypal')
+         const script=document.createElement("script")
+         script.type='text/javascript'
+         script.src=`https://www.paypal.com/sdk/js?client-id=${clientId}`
+         script.async=true
+         script.onload=()=>{
+             setSdkReady(true)
+         }
+         document.body.appendChild(script)
+       }
+  
+       if(!order||successPay)
+       {   dispatch({
+           type:ORDER_PAY_RESET
+       })
+           dispatch(getOrderDetail(id))
+       }
+       else if(!order.isPaid)
+       {
+           if(!window.paypal)
+           {
+               addPayPalScript()
+           }
+           else{
+               setSdkReady(true)
+           }
+       }
+   },[order,id,successPay,dispatch])
+
+   const successPaymentHandler=(paymentResult)=>{
+console.log(paymentResult)
+dispatch(payOrder(id,paymentResult))
+   }
    return (
       <>
     {(!Loading)&&
@@ -48,12 +88,18 @@ order.itemsPrice=addDecimals(order.orderItems.reduce((acc,item)=>acc+item.price*
                    {order&&order.shippingAddress.postalCode},{' '}
                    {order&&order.shippingAddress.country}
                </p>
+               {order.isDelivered?<Message variant='success'>paid at {order.DeliveredAt}</Message>:
+                <Message variant='danger'>Not paid</Message>}
                
             </ListGroup.Item>
             <ListGroup.Item>
                 <h2>PayMent Method</h2>
+                <p>
                 <strong>Method:</strong>
                 {order&&order.paymentMethod}
+                </p>
+                {order.isPaid?<Message variant='success'>paid on {order.paidAt}</Message>:
+                <Message variant='danger'>Not paid</Message>}
             </ListGroup.Item>
             <ListGroup.Item>
                 <h2>Order Items</h2>
@@ -113,7 +159,14 @@ order.itemsPrice=addDecimals(order.orderItems.reduce((acc,item)=>acc+item.price*
                         <Col>${order&&order.totalPrice}</Col>
                     </Row>
                 </ListGroup.Item>  
-     
+               {!order.isPaid&&(
+                   <ListGroup.Item>
+                       {loadingPay&&<Loader />}
+                       {!sdkReady?<Loader />:(
+                           <PayPalButton amount={order.totalPrice} onSuccess={successPaymentHandler} />
+                       )}
+                   </ListGroup.Item>
+               )}
             </ListGroup>
         </Card>
     </Col>

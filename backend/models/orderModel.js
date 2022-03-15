@@ -27,7 +27,7 @@ const orderSchema=Mongoose.Schema({
             type:String,
             requied:true
         },
-        paymentresult:{
+        paymentResult:{
             id:{type:String},
             status:{type:String},
             updatetime:{type:String},
@@ -48,20 +48,20 @@ const orderSchema=Mongoose.Schema({
             required:true,
             default:0.0, 
          },
-         ispaid:{
+         isPaid:{
              type:Boolean,
              required:true,
              default:false
          },
-         paidat:{
+         paidAt:{
          type:Date
          },
-         isdelivered:{
+         isDelivered:{
              type:Boolean,
             
              default:false
          },
-         deliveredat:{
+         DeliveredAt:{
           type:Date   
          }
                 },{

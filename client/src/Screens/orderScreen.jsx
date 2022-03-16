@@ -17,11 +17,12 @@ const OrderScreen=()=>{
 
   const [sdkReady,setSdkReady]=useState(false)
 
-
+   
   const  orderDetail=useSelector((state)=>state.orderDetail)
-   const {order}=orderDetail;  
+  const {orders}=orderDetail;  
 const {Loading}=orderDetail;
- 
+console.log(orderDetail)
+
 const  orderPay=useSelector((state)=>state.orderPay)
 const {loading:loadingPay}=orderPay;
 const {success:successPay}=orderPay
@@ -32,7 +33,7 @@ const {success:successPay}=orderPay
    return (Math.round(num*100)/100).toFixed(2)
   }
 
-order.itemsPrice=addDecimals(order.orderItems.reduce((acc,item)=>acc+item.price*item.qty,0))
+orders.itemsPrice=addDecimals(orders.orderItems.reduce((acc,item)=>acc+item.price*item.qty,0))
    }
 
    useEffect(()=>{
@@ -48,13 +49,13 @@ order.itemsPrice=addDecimals(order.orderItems.reduce((acc,item)=>acc+item.price*
          document.body.appendChild(script)
        }
   
-       if(!order||successPay)
+       if(!orders||successPay)
        {   dispatch({
            type:ORDER_PAY_RESET
-       })
+           })
            dispatch(getOrderDetail(id))
        }
-       else if(!order.isPaid)
+       else if(!orders.isPaid)
        {
            if(!window.paypal)
            {
@@ -64,7 +65,9 @@ order.itemsPrice=addDecimals(order.orderItems.reduce((acc,item)=>acc+item.price*
                setSdkReady(true)
            }
        }
-   },[order,id,successPay,dispatch])
+      
+   },[orders,id,successPay,dispatch])
+
 
    const successPaymentHandler=(paymentResult)=>{
 console.log(paymentResult)
@@ -79,34 +82,34 @@ dispatch(payOrder(id,paymentResult))
         <ListGroup variant='flush'>
             <ListGroup.Item>
                <h2>Shipping</h2>
-              <p> <strong>Name:</strong>{order&&order.user.name}</p>
+              <p> <strong>Name:</strong>{orders&&orders.user.name}</p>
                <p><strong>Email:</strong>{' '}
-               <a href={`mailto:${order.user.email}`}>{order.user.email}</a></p>
+               <a href={`mailto:${orders.user.email}`}>{orders.user.email}</a></p>
                <p>
                    <strong>Address:</strong>
-                   {order&&order.shippingAddress.address},{order&&order.shippingAddress.city}{' '}
-                   {order&&order.shippingAddress.postalCode},{' '}
-                   {order&&order.shippingAddress.country}
+                   {orders&&orders.shippingAddress.address},{orders&&orders.shippingAddress.city}{' '}
+                   {orders&&orders.shippingAddress.postalCode},{' '}
+                   {orders&&orders.shippingAddress.country}
                </p>
-               {order.isDelivered?<Message variant='success'>paid at {order.DeliveredAt}</Message>:
-                <Message variant='danger'>Not paid</Message>}
+               {orders.isDelivered?<Message variant='success'>paid at {orders.DeliveredAt}</Message>:
+                <Message variant='danger'>Not delivered</Message>}
                
             </ListGroup.Item>
             <ListGroup.Item>
                 <h2>PayMent Method</h2>
                 <p>
                 <strong>Method:</strong>
-                {order&&order.paymentMethod}
+                {orders&&orders.paymentMethod}
                 </p>
-                {order.isPaid?<Message variant='success'>paid on {order.paidAt}</Message>:
+                {orders.isPaid?<Message variant='success'>paid on {orders.paidAt}</Message>:
                 <Message variant='danger'>Not paid</Message>}
             </ListGroup.Item>
             <ListGroup.Item>
                 <h2>Order Items</h2>
              {
-                 order&&order.orderItems.length===0?<Message>your cart is empty</Message>
+                 orders&&orders.orderItems.length===0?<Message>your cart is empty</Message>
                  :(<ListGroup variant='flush'>
-                     {order&&order.orderItems.map((item,index)=>(
+                     {orders&&orders.orderItems.map((item,index)=>(
                          <ListGroup.Item key={index}>
                              <Row>
                                  <Col md={1}>
@@ -138,32 +141,32 @@ dispatch(payOrder(id,paymentResult))
                 <ListGroup.Item>
                     <Row>
                         <Col>ItemsPrice</Col>
-                        <Col>${order&&order.itemsPrice}</Col>
+                        <Col>${orders&&orders.itemsPrice}</Col>
                     </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
                     <Row>
                         <Col>Shipping</Col>
-                        <Col>${order&&order.shippingPrice}</Col>
+                        <Col>${orders&&orders.shippingPrice}</Col>
                     </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
                     <Row>
                         <Col>Tax</Col>
-                        <Col>${order&&order.taxPrice}</Col>
+                        <Col>${orders&&orders.taxPrice}</Col>
                     </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
                     <Row>
                         <Col>Total</Col>
-                        <Col>${order&&order.totalPrice}</Col>
+                        <Col>${orders&&orders.totalPrice}</Col>
                     </Row>
                 </ListGroup.Item>  
-               {!order.isPaid&&(
+               {!orders.isPaid&&(
                    <ListGroup.Item>
                        {loadingPay&&<Loader />}
                        {!sdkReady?<Loader />:(
-                           <PayPalButton amount={order.totalPrice} onSuccess={successPaymentHandler} />
+                           <PayPalButton amount={orders.totalPrice} onSuccess={successPaymentHandler} />
                        )}
                    </ListGroup.Item>
                )}

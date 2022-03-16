@@ -1,4 +1,10 @@
-import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS,USER_LOGOUT ,USER_REGISTER_FAIL,USER_REGISTER_REQUEST,USER_REGISTER_SUCCESS,USER_DETAIL_FAIL,USER_DETAIL_REQUEST,USER_DETAIL_SUCCESS, USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_SUCCESS, USER_UPDATE_PROFILE_FAIL} from "../Constants/userConstants"
+import { USER_LOGIN_FAIL,
+     USER_LOGIN_REQUEST, 
+     USER_LOGIN_SUCCESS,
+     USER_DETAIL_RESET,
+    
+     USER_LOGOUT ,USER_REGISTER_FAIL,USER_REGISTER_REQUEST,USER_REGISTER_SUCCESS,USER_DETAIL_FAIL,USER_DETAIL_REQUEST,USER_DETAIL_SUCCESS, USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_SUCCESS, USER_UPDATE_PROFILE_FAIL} from "../Constants/userConstants"
+     import { ORDER_LIST_MY_RESET } from "../Constants/orderConstants";
 import axios from 'axios';
 export const login =(email,password)=>async(dispatch)=>{
     try{
@@ -30,6 +36,8 @@ localStorage.setItem('userInfo',JSON.stringify(data));
 export const logout=()=>(dispatch)=>{
     localStorage.removeItem('userInfo');
     dispatch({type:USER_LOGOUT})
+    dispatch({type:USER_DETAIL_RESET})
+    dispatch({type:ORDER_LIST_MY_RESET})
 }
 export const register =(name,email,password)=>async(dispatch)=>{
     try{
@@ -77,7 +85,7 @@ const config={
     }
 }
  const {data}=await axios.get(`/api/users/${id}`,config)
-
+console.log(data)
 dispatch({
     type:USER_DETAIL_SUCCESS,
     payload:data

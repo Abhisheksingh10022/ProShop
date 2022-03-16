@@ -21,12 +21,14 @@ const PlaceOrderScreen=()=>{
     cart.totalprice=Number(cart.itemsPrice)+Number(cart.shippingprice)+Number(cart.taxprice)
 
     const orderCreate=useSelector(state=>state.orderCreate)
-     const{loading,success,error}=orderCreate
+     const{loading,success,order}=orderCreate
+   console.log(orderCreate.loading)
+    if(!orderCreate.loading)
+    {
+        console.log(orderCreate.order._id)
+    }
     useEffect(()=>{
-        if(success)
-        {
-      
-        }
+        
     },[navigate,success])
 
     const placeOrderHandler=()=>{
@@ -42,6 +44,11 @@ const PlaceOrderScreen=()=>{
        }
   
        dispatch(createOrder(Order))
+       if(!orderCreate.loading)
+       {  
+         navigate(`/order/${orderCreate.order._id}`)
+       }
+      
     }
 
     return(

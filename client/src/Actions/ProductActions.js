@@ -9,7 +9,7 @@ import { PRODUCT_LIST_FAIL,PRODUCT_LIST_SUCCESS,
   try{
    dispatch({type:PRODUCT_LIST_REAQUEST})
 
-   const {data}=await axios.get('api/products')
+   const {data}=await axios.get('/api/products')
    dispatch({
        type:PRODUCT_LIST_SUCCESS,
        payload:data

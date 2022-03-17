@@ -8,7 +8,7 @@ import Rating from "../Components/Rating";
 import { useParams } from "react-router-dom";
 import { ListProductDetails } from "../Actions/ProductActions";
 
-const ProductScreen=({history})=>{
+const ProductScreen=({})=>{
 const [qty,setQty]=useState(1);
 
     const dispatch=useDispatch();

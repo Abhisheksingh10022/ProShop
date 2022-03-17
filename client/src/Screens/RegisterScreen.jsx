@@ -95,7 +95,7 @@ import Message from "../Components/Message";
         Have an account?
         <Row>
           <Col>
-          <Link to="/login">Register</Link>
+          <Link to="/login">Sign In</Link>
           </Col>
         </Row>
         

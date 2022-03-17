@@ -18,17 +18,16 @@ const PlaceOrderScreen=()=>{
     
     cart.shippingprice=addDecimals(cart.itemsPrice>100?0:100)
     cart.taxprice=addDecimals(Number((0.15*cart.itemsPrice).toFixed(2)))
-    cart.totalprice=Number(cart.itemsPrice)+Number(cart.shippingprice)+Number(cart.taxprice)
-
+    cart.totalprice=(Number(cart.itemsPrice)+Number(cart.shippingprice)+Number(cart.taxprice)).toFixed(2)
+   
     const orderCreate=useSelector(state=>state.orderCreate)
      const{loading,success,order}=orderCreate
-   console.log(orderCreate.loading)
-    if(!orderCreate.loading)
-    {
-        console.log(orderCreate.order._id)
-    }
+     console.log(orderCreate)
     useEffect(()=>{
-        
+      if(success)
+      {
+        navigate(`/order/${orderCreate.order._id}`)
+      }
     },[navigate,success])
 
     const placeOrderHandler=()=>{
@@ -44,10 +43,12 @@ const PlaceOrderScreen=()=>{
        }
   
        dispatch(createOrder(Order))
-       if(!orderCreate.loading)
-       {  
-         navigate(`/order/${orderCreate.order._id}`)
-       }
+     
+    if(!orderCreate.loading)
+   {  
+     navigate(`/order/${orderCreate.order._id}`)
+   }
+      
       
     }
 

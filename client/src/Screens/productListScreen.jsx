@@ -5,8 +5,9 @@ import Loader from "../Components/loader";
 import Message from "../Components/Message";
 import{LinkContainer} from "react-router-bootstrap";
 import { ListUsers,deleteUser } from "../Actions/userActions";
-import {ListProducts} from "../Actions/ProductActions"
+import {ListProducts,deleteProduct,createProduct} from "../Actions/ProductActions"
 import { useNavigate ,useParams} from "react-router-dom";
+import { PRODUCT_CREATE_RESET } from "../Constants/ProductConstants";
 const ProductListScreen=()=>{
     const dispatch=useDispatch();
     const navigate=useNavigate();
@@ -14,32 +15,43 @@ const ProductListScreen=()=>{
     const productList=useSelector(state=>state.productList)
     const{loading,error,products}=productList
 
-console.log(productList)
+    const productDelete =useSelector(state=>state.productDelete)
+    const{loading:loadingDelete,error:errorDelete,success:successDelete}=productDelete
     
+
+    const productCreate =useSelector(state=>state.productCreate)
+    const{loading:loadingCreate,success:successCreate,error:errorCreate,product:createdProduct}=productCreate
+    console.log(productCreate)
+
     const userLogin=useSelector(state=>state.userLogin)
     const{userInfo}=userLogin
 
      useEffect(()=>{
-         if(userInfo&&userInfo.isAdmin)
+         dispatch({type:PRODUCT_CREATE_RESET})
+         if(!userInfo.isAdmin)
          {
-         dispatch(ListProducts())
+        navigate('/login')
+         }
+         if(successCreate)
+         {
+             navigate(`/admin/product/${createdProduct._id}/edit`)
          }
          else{
-             navigate('/login')
+             dispatch(ListProducts())
          }
-     },[dispatch,userInfo])
+     },[dispatch,userInfo,successDelete,successCreate,createdProduct])
 
      const deleteHandler=(id)=>{
          const st=window.confirm('Are you sure')
          console.log(st)
          if(st===true)
          {
-      //DELETE PRODUCTS
+      dispatch(deleteProduct(id))
          }
          
      }
-     const createProductHandler=(product)=>{
-         console.log('createProduct')
+     const createProductHandler=()=>{
+       dispatch(createProduct())
      }
     return (
         <>
@@ -47,11 +59,15 @@ console.log(productList)
           <Col>
           <h1>Products</h1>
               </Col>
+              <Col className="text-right">
               <Button className='my-3' onClick={createProductHandler}><i className="fas fa-plus"></i>Create Product</Button>
-        </Row>
-    
-        {
-        loading?<Loader />:error?<Message variant='danger'></Message>:(
+              </Col>
+              </Row>
+              {loadingDelete&&<Loader />}
+          {errorDelete&&<Message variant='danger' >{errorDelete}</Message>}
+          {loadingCreate&&<Loader />}
+          {errorCreate&&<Message variant='danger' >{errorCreate}</Message>}
+        {loading?<Loader />:error?<Message variant='danger'></Message>:(
        <Table striped bordered hover responsive className="table-sm">
            <thead>
                <tr>

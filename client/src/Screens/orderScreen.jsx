@@ -4,9 +4,9 @@ import {useDispatch,useSelector} from "react-redux";
 import Message from "../Components/Message";
 import {PayPalButton} from "react-paypal-button-v2"
 import { Link,useParams } from "react-router-dom";
-import { getOrderDetail, payOrder } from "../Actions/orderActions";
+import { getOrderDetail, payOrder,deliverOrder } from "../Actions/orderActions";
 import Loader from "../Components/loader";
-import { ORDER_PAY_RESET } from "../Constants/orderConstants";
+import { ORDER_PAY_RESET,ORDER_DELIVERED_RESET } from "../Constants/orderConstants";
 import axios from "axios";
 
 const OrderScreen=()=>{
@@ -21,11 +21,18 @@ const OrderScreen=()=>{
   const  orderDetail=useSelector((state)=>state.orderDetail)
   const {orders}=orderDetail;  
 const {Loading}=orderDetail;
-console.log(orderDetail)
+
 
 const  orderPay=useSelector((state)=>state.orderPay)
 const {loading:loadingPay}=orderPay;
 const {success:successPay}=orderPay
+
+const  orderDeliver=useSelector((state)=>state.orderDeliver)
+const {loading:loadingDeliver}=orderDeliver;
+const {success:successDeliver}=orderDeliver;
+
+const  userLogin=useSelector((state)=>state.userLogin)
+const {userInfo}=userLogin
 
    if(!Loading)
    {
@@ -49,10 +56,11 @@ orders.itemsPrice=addDecimals(orders.orderItems.reduce((acc,item)=>acc+item.pric
          document.body.appendChild(script)
        }
   
-       if(!orders||successPay)
+       if(!orders||successPay||successDeliver)
        {   dispatch({
            type:ORDER_PAY_RESET
            })
+           dispatch({type:ORDER_DELIVERED_RESET})
            dispatch(getOrderDetail(id))
        }
        else if(!orders.isPaid)
@@ -66,12 +74,16 @@ orders.itemsPrice=addDecimals(orders.orderItems.reduce((acc,item)=>acc+item.pric
            }
        }
       
-   },[orders,id,successPay,dispatch])
+   },[orders,id,successPay,dispatch,successDeliver])
 
 
    const successPaymentHandler=(paymentResult)=>{
 console.log(paymentResult)
 dispatch(payOrder(id,paymentResult))
+   }
+
+   const deliverHandler=()=>{
+       dispatch(deliverOrder(orders))
    }
    return (
       <>
@@ -168,6 +180,12 @@ dispatch(payOrder(id,paymentResult))
                        {!sdkReady?<Loader />:(
                            <PayPalButton amount={orders.totalPrice} onSuccess={successPaymentHandler} />
                        )}
+                   </ListGroup.Item>
+               )}
+               {loadingDeliver&&<Loader />}
+               {userInfo.isAdmin&&orders.isPaid&&!orders.isDelivered&&(
+                   <ListGroup.Item>
+                       <Button type='button' className='btn btn-block' onClick={deliverHandler}>Mark As Deliverd</Button>
                    </ListGroup.Item>
                )}
             </ListGroup>

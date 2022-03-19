@@ -16,11 +16,11 @@ import { PRODUCT_LIST_FAIL,PRODUCT_LIST_SUCCESS,
   PRODUCT_CREATE_REVIEW_SUCCESS
 } from "../Constants/ProductConstants"
  import axios from "axios";
- export const ListProducts=()=> async(dispatch)=>{
+ export const ListProducts=(keyword='')=> async(dispatch)=>{
   try{
    dispatch({type:PRODUCT_LIST_REAQUEST})
 
-   const {data}=await axios.get('/api/products')
+   const {data}=await axios.get(`/api/products?keyword=${keyword} `)
    dispatch({
        type:PRODUCT_LIST_SUCCESS,
        payload:data

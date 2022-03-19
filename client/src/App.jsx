@@ -39,6 +39,7 @@ const App=()=> {
        <Route path="/admin/user/:id/edit" element={<UserEditScreen></UserEditScreen>} exact />
        <Route path="/admin/productlist" element={<ProductListScreen></ProductListScreen>}exact />
        <Route path="/admin/orderlist" element={<OrderListScreen></OrderListScreen>}exact />
+       <Route path='/search/:keyword' element={<HomeScreen/>} ></Route>
        <Route path='/' element={<HomeScreen/>} exact></Route>
 </Routes>
    </Container>

@@ -18,21 +18,25 @@ import {LinkContainer} from 'react-router-bootstrap'
 
   const dispatch=useDispatch();
 
+
+  const orderMyList=useSelector((state)=>state.orderMyList);
+  const {loading:loadingOrders,error:errorOrders,orders}=orderMyList;
+
+
+
   const userDetails=useSelector((state)=>state.userDetails);
   const {loading,error,user}=userDetails;
 
 
-  const orderMyList=useSelector((state)=>state.orderMyList);
-  const {loading:loadingOrders,error:errorOrders,orders}=orderMyList;
-console.log(orders)
-console.log(orderMyList.Loading)
   const userUpdateProfile=useSelector((state)=>state.userUpdateProfile);
   const {success}=userUpdateProfile;
 
   const userLogin=useSelector((state)=>state.userLogin);
   const {userInfo}=userLogin;
+  
 
    const navigate=useNavigate();
+  
    useEffect(()=>{
    
      if(!userInfo)
@@ -41,9 +45,11 @@ console.log(orderMyList.Loading)
      }
      else{
          if(!user.name)
-         {
+         {          
              dispatch(getUserDetails('profile'))
              dispatch(listMyOrders())
+             
+             
          }
          else{
              setName(user.name);
@@ -52,31 +58,34 @@ console.log(orderMyList.Loading)
      }
      
      
-   },[dispatch,navigate,userInfo,user,getUserDetails,listMyOrders])  
-    const submitHandler=(e)=>{
-        e.preventDefault();
-        if(password!=confirmPassword)
-        {
-            setMessage('passwords do not match')
-        }
-        else{
-          dispatch(updateUserProfile({id:user._id,name,email,password}))
-        }
+   },[dispatch,navigate,userInfo,user,])  
+
+   const submitHandler=(e)=>{
+    e.preventDefault();
+    if(password!==confirmPassword)
+    {
+        setMessage('passwords do not match')
     }
-    
+    else{
+      dispatch(updateUserProfile({id:user._id,name,email,password}))
+    }
+}
+   
     return( 
         <>
+        {(!loadingOrders)&&
         <Row>
             <Col md={3}>
             <h1>User profile</h1>
-        {message &&<Message variant='danger'>{message}</Message>}
+          
         {
-          error&&<Message variant="danger" disabled>{error}</Message>
+          error&&<Message variant="danger" >{error}</Message>
         }
         
            {success &&<Message variant='success'>Profile Updated</Message>}
         
         {loading&&<Loader />}
+        
         <Form onSubmit={submitHandler}>
          <Form.Group controlId="name">
         <Form.Label> Name</Form.Label>
@@ -124,7 +133,7 @@ console.log(orderMyList.Loading)
       </Button>
         </Form>
                 </Col>
-                {(!orderMyList.Loading)&&(
+                {(!loadingOrders)&&(
                 <Col md={9}>
                   <h2>My Orders</h2>
                   {loadingOrders?<Loader />:errorOrders?<Message variant='danger'>{errorOrders}</Message>:(
@@ -136,10 +145,11 @@ console.log(orderMyList.Loading)
                         <th>TOTAL</th>
                         <th>PAID</th>
                         <th>DELIVERED</th>
+                        <th></th>
                           </tr>
                       </thead>
                       <tbody>
-                        {orders.map(order=>(<tr key={order._id}>
+                        {orders&&orders.map((order)=>(<tr key={order._id}>
                           <td>{order._id}</td>
                           <td>{order.createdAt.substring(0,10)}</td>
                           <td>{order.totalPrice}</td>
@@ -147,7 +157,7 @@ console.log(orderMyList.Loading)
                           <td>{order.isDelivered?order.deliveredAt.substring(0,10):(<i className="fas fa-times" style={{color:"red"}}></i>)}</td>
                           <td>
                             <LinkContainer to={`/order/${order._id}`}>
-                              <Button variant='ligh'>Details</Button>
+                              <Button variant='light'>Details</Button>
                             </LinkContainer>
                           </td>
                         </tr>))}
@@ -160,7 +170,7 @@ console.log(orderMyList.Loading)
                 
         </Row>
       
-        
+}
       
 
     </>

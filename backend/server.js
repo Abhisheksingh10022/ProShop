@@ -6,12 +6,16 @@ import ProductRouters from "./Routes/ProductRouters.js";
 import{NotFound,ErrorHandler} from "./Middlewares/errorMiddlewares.js";
 import userRoutes from"./Routes/userRoutes.js";
 import orderRoutes from "./Routes/orderRoutes.js";
-
+import morgan from 'morgan'
 
 dotenv.config();
 
 connectDB();//connecting mongodb
 const app =express();
+
+if(process.env.NODE_ENV==='development'){
+app.use(morgan('dev'))
+}
 app.get("/",(req,res)=>{
    res.send("running");
 });

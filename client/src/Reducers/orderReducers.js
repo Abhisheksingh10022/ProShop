@@ -51,7 +51,8 @@ export const orderDetailReducer=(state={Loading:true,orderItems:[],shippingAddre
             case ORDER_DETAIL_SUCCESS:
                 return{
                    Loading:false,
-                    orders:action.payload
+                    orders:action.payload,
+                    success:true
                 }
                 case ORDER_DETAIL_FAIL:
                 return{
@@ -90,18 +91,18 @@ export const orderMyListReducer=(state={orders:[]},action)=>{
     {
         case ORDER_LIST_MY_REQUEST:
             return {
-                Loading:true
+                loading:true
             }
             case ORDER_LIST_MY_SUCCESS:
                 return{
-                   Loading:false,
+                   loading:false,
                    orders:action.payload
 
                 
                 }
                 case ORDER_LIST_MY_FAIL:
                 return{
-                    Loading:false,
+                    loading:false,
                    error:action.payload
                 }
                 case ORDER_LIST_MY_RESET:
@@ -112,16 +113,14 @@ export const orderMyListReducer=(state={orders:[]},action)=>{
 }
 
 export const orderListReducer=(state={orders:[]},action)=>{
- console.log()
+
 switch(action.type)
 {
     case ORDER_LIST_REQUEST:
- 
     return {
         loading:true
     }
     case ORDER_LIST_SUCCESS:
-     
         return { loading:false,orders:action.payload}
         case ORDER_LIST_FAIL:
             return{ loading:false,error:action.payload }

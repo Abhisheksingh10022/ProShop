@@ -8,8 +8,12 @@ import { PRODUCT_LIST_FAIL,PRODUCT_LIST_SUCCESS,
   PRODUCT_DELETE_SUCCESS,
   PRODUCT_CREATE_FAIL,
   PRODUCT_CREATE_REAQUEST,
-  PRODUCT_CREATE_RESET,
-  PRODUCT_CREATE_SUCCESS
+
+  PRODUCT_CREATE_SUCCESS,
+  PRODUCT_CREATE_REVIEW_FAIL,
+  PRODUCT_CREATE_REVIEW_REAQUEST,
+ 
+  PRODUCT_CREATE_REVIEW_SUCCESS
 } from "../Constants/ProductConstants"
  import axios from "axios";
  export const ListProducts=()=> async(dispatch)=>{
@@ -109,6 +113,40 @@ dispatch(
   {
       dispatch({
           type:PRODUCT_CREATE_FAIL,
+          payload:error.response&&error.response.data.message?
+          error.response.data.message
+          :error.message
+      })
+  }
+}
+
+export const createProductReview =(productId,review)=>async(dispatch,getState)=>{
+  console.log(productId)
+  try{
+dispatch({
+  type:PRODUCT_CREATE_REVIEW_REAQUEST
+})
+const userInfo=getState().userLogin.userInfo;
+
+const config={
+  headers:{
+      'Content-Type':'application/json',
+      Authorization:`Bearer ${userInfo.token}`
+  }
+}
+await axios.post(`/api/products/${productId}/reviews`,review,config)
+
+dispatch(
+  {
+  type:PRODUCT_CREATE_REVIEW_SUCCESS,
+   
+})
+
+  }
+  catch(error)
+  {
+      dispatch({
+          type:PRODUCT_CREATE_REVIEW_FAIL,
           payload:error.response&&error.response.data.message?
           error.response.data.message
           :error.message

@@ -28,7 +28,7 @@ const PlaceOrderScreen=()=>{
       {
         navigate(`/order/${orderCreate.order._id}`)
       }
-    },[navigate,success])
+    },[navigate,success,orderCreate])
 
     const placeOrderHandler=()=>{
        const Order={

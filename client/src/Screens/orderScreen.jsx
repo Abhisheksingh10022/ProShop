@@ -3,15 +3,16 @@ import {Button,Row,Col,ListGroup,Image,Card} from "react-bootstrap";
 import {useDispatch,useSelector} from "react-redux";
 import Message from "../Components/Message";
 import {PayPalButton} from "react-paypal-button-v2"
-import { Link,useParams } from "react-router-dom";
+import { Link,useParams ,useNavigate} from "react-router-dom";
 import { getOrderDetail, payOrder,deliverOrder } from "../Actions/orderActions";
 import Loader from "../Components/loader";
 import { ORDER_PAY_RESET,ORDER_DELIVERED_RESET } from "../Constants/orderConstants";
 import axios from "axios";
 
 const OrderScreen=()=>{
-   const dispatch=useDispatch();
 
+   const dispatch=useDispatch();
+   const navigate=useNavigate();
   const{id}=useParams();
   console.log(id)
 
@@ -19,10 +20,8 @@ const OrderScreen=()=>{
 
    
   const  orderDetail=useSelector((state)=>state.orderDetail)
-  const {orders}=orderDetail;  
-const {Loading}=orderDetail;
-
-
+   const {Loading,orders,success}=orderDetail
+  console.log(orderDetail)
 const  orderPay=useSelector((state)=>state.orderPay)
 const {loading:loadingPay}=orderPay;
 const {success:successPay}=orderPay
@@ -30,6 +29,7 @@ const {success:successPay}=orderPay
 const  orderDeliver=useSelector((state)=>state.orderDeliver)
 const {loading:loadingDeliver}=orderDeliver;
 const {success:successDeliver}=orderDeliver;
+console.log(orderDeliver)
 
 const  userLogin=useSelector((state)=>state.userLogin)
 const {userInfo}=userLogin
@@ -44,6 +44,11 @@ orders.itemsPrice=addDecimals(orders.orderItems.reduce((acc,item)=>acc+item.pric
    }
 
    useEffect(()=>{
+      
+       if(!userInfo)
+       {
+           navigate('/login')
+       }
        const addPayPalScript=async()=>{
            const {data:clientId}=await axios.get('/api/config/paypal')
          const script=document.createElement("script")
@@ -55,12 +60,15 @@ orders.itemsPrice=addDecimals(orders.orderItems.reduce((acc,item)=>acc+item.pric
          }
          document.body.appendChild(script)
        }
-  
+   
+       
        if(!orders||successPay||successDeliver)
-       {   dispatch({
-           type:ORDER_PAY_RESET
-           })
-           dispatch({type:ORDER_DELIVERED_RESET})
+       {   
+        dispatch({
+            type:ORDER_PAY_RESET
+            })
+        dispatch({type:ORDER_DELIVERED_RESET})
+      
            dispatch(getOrderDetail(id))
        }
        else if(!orders.isPaid)
@@ -74,7 +82,7 @@ orders.itemsPrice=addDecimals(orders.orderItems.reduce((acc,item)=>acc+item.pric
            }
        }
       
-   },[orders,id,successPay,dispatch,successDeliver])
+   },[orders,dispatch,id,successDeliver,loadingDeliver,navigate,successPay])
 
 
    const successPaymentHandler=(paymentResult)=>{
@@ -183,9 +191,9 @@ dispatch(payOrder(id,paymentResult))
                    </ListGroup.Item>
                )}
                {loadingDeliver&&<Loader />}
-               {userInfo.isAdmin&&orders.isPaid&&!orders.isDelivered&&(
+               { userInfo&&userInfo.isAdmin && orders.isPaid &&orders.isDelivered&&(
                    <ListGroup.Item>
-                       <Button type='button' className='btn btn-block' onClick={deliverHandler}>Mark As Deliverd</Button>
+                       <Button type='button' className='btn btn-block' onClick={deliverHandler}>Mark As Delivered</Button>
                    </ListGroup.Item>
                )}
             </ListGroup>

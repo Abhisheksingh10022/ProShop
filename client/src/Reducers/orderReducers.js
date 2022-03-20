@@ -97,8 +97,6 @@ export const orderMyListReducer=(state={orders:[]},action)=>{
                 return{
                    loading:false,
                    orders:action.payload
-
-                
                 }
                 case ORDER_LIST_MY_FAIL:
                 return{

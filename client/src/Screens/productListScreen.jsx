@@ -8,12 +8,14 @@ import { ListUsers,deleteUser } from "../Actions/userActions";
 import {ListProducts,deleteProduct,createProduct} from "../Actions/ProductActions"
 import { useNavigate ,useParams} from "react-router-dom";
 import { PRODUCT_CREATE_RESET } from "../Constants/ProductConstants";
+import Paginate from "../Components/Paginate";
 const ProductListScreen=()=>{
+    const pageNumber=useParams()||1;
     const dispatch=useDispatch();
     const navigate=useNavigate();
 
     const productList=useSelector(state=>state.productList)
-    const{loading,error,products}=productList
+    const{loading,error,products,pages,page}=productList
 
     const productDelete =useSelector(state=>state.productDelete)
     const{loading:loadingDelete,error:errorDelete,success:successDelete}=productDelete
@@ -37,9 +39,9 @@ const ProductListScreen=()=>{
              navigate(`/admin/product/${createdProduct._id}/edit`)
          }
          else{
-             dispatch(ListProducts())
+             dispatch(ListProducts('',pageNumber))
          }
-     },[dispatch,userInfo,successDelete,successCreate,createdProduct])
+     },[dispatch,userInfo,successDelete,successCreate,createdProduct,pageNumber])
 
      const deleteHandler=(id)=>{
          const st=window.confirm('Are you sure')
@@ -68,6 +70,7 @@ const ProductListScreen=()=>{
           {loadingCreate&&<Loader />}
           {errorCreate&&<Message variant='danger' >{errorCreate}</Message>}
         {loading?<Loader />:error?<Message variant='danger'></Message>:(
+            <>
        <Table striped bordered hover responsive className="table-sm">
            <thead>
                <tr>
@@ -104,6 +107,8 @@ const ProductListScreen=()=>{
                ))}
            </tbody>
        </Table>
+       <Paginate pages={pages} page={page} isAdmin={true} />
+       </>
         )
         }
         </>

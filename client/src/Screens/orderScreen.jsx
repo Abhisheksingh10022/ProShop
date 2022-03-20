@@ -13,15 +13,15 @@ const OrderScreen=()=>{
 
    const dispatch=useDispatch();
    const navigate=useNavigate();
-  const{id}=useParams();
-  console.log(id)
+  const{id}=useParams()
 
   const [sdkReady,setSdkReady]=useState(false)
 
    
   const  orderDetail=useSelector((state)=>state.orderDetail)
-   const {Loading,orders,success}=orderDetail
-  console.log(orderDetail)
+   const {Loading,orders,error}=orderDetail
+   console.log(orderDetail)
+ 
 const  orderPay=useSelector((state)=>state.orderPay)
 const {loading:loadingPay}=orderPay;
 const {success:successPay}=orderPay
@@ -29,7 +29,7 @@ const {success:successPay}=orderPay
 const  orderDeliver=useSelector((state)=>state.orderDeliver)
 const {loading:loadingDeliver}=orderDeliver;
 const {success:successDeliver}=orderDeliver;
-console.log(orderDeliver)
+
 
 const  userLogin=useSelector((state)=>state.userLogin)
 const {userInfo}=userLogin
@@ -82,7 +82,7 @@ orders.itemsPrice=addDecimals(orders.orderItems.reduce((acc,item)=>acc+item.pric
            }
        }
       
-   },[orders,dispatch,id,successDeliver,loadingDeliver,navigate,successPay])
+   },[orders,dispatch,id,successDeliver,navigate,successPay])
 
 
    const successPaymentHandler=(paymentResult)=>{
@@ -94,8 +94,10 @@ dispatch(payOrder(id,paymentResult))
        dispatch(deliverOrder(orders))
    }
    return (
-      <>
-    {(!Loading)&&
+       Loading?(<Loader />):error?(
+           <Message variant='danger'>{error}</Message>
+       ):(
+    
     <Row >
          <Col md={8}>
         
@@ -191,7 +193,7 @@ dispatch(payOrder(id,paymentResult))
                    </ListGroup.Item>
                )}
                {loadingDeliver&&<Loader />}
-               { userInfo&&userInfo.isAdmin && orders.isPaid &&orders.isDelivered&&(
+               { userInfo.isAdmin && orders.isPaid && !orders.isDelivered&&(
                    <ListGroup.Item>
                        <Button type='button' className='btn btn-block' onClick={deliverHandler}>Mark As Delivered</Button>
                    </ListGroup.Item>
@@ -200,8 +202,8 @@ dispatch(payOrder(id,paymentResult))
         </Card>
     </Col>
 </Row>
-}
-    </>
+       )
+
             
    )
 

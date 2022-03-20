@@ -13,14 +13,17 @@ import { PRODUCT_LIST_FAIL,PRODUCT_LIST_SUCCESS,
   PRODUCT_CREATE_REVIEW_FAIL,
   PRODUCT_CREATE_REVIEW_REAQUEST,
  
-  PRODUCT_CREATE_REVIEW_SUCCESS
+  PRODUCT_CREATE_REVIEW_SUCCESS,
+  PRODUCT_TOP_FAIL,
+  PRODUCT_TOP_SUCCESS,
+  PRODUCT_TOP_REAQUEST
 } from "../Constants/ProductConstants"
  import axios from "axios";
- export const ListProducts=(keyword='')=> async(dispatch)=>{
+ export const ListProducts=(keyword='',pageNumber='')=> async(dispatch)=>{
   try{
    dispatch({type:PRODUCT_LIST_REAQUEST})
 
-   const {data}=await axios.get(`/api/products?keyword=${keyword} `)
+   const {data}=await axios.get(`/api/products?keyword=${keyword}&pageNumber=${pageNumber} `)
    dispatch({
        type:PRODUCT_LIST_SUCCESS,
        payload:data
@@ -153,3 +156,23 @@ dispatch(
       })
   }
 }
+export const listTopProducts=()=> async(dispatch)=>{
+  try{
+   dispatch({type:PRODUCT_TOP_REAQUEST})
+
+   const {data}=await axios.get("/api/products/vb/top"
+   )
+   dispatch({
+       type:PRODUCT_TOP_SUCCESS,
+       payload:data
+  })
+}
+  catch(error){
+    dispatch({
+        type:PRODUCT_TOP_FAIL,
+        payload:error.response&&error.response.data.message?
+        error.response.data.message
+        :error.message
+    })
+  }
+ }

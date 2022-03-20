@@ -12,7 +12,7 @@ import Message from "../Components/Message";
     const {id}=useParams()
     const [name,setName]=useState('');
    const [email,setEmail]=useState('');
-    const[isAdmin,setIsAdmin]=useState('');
+    const[isAdmin,setIsAdmin]=useState(false);
     
   
   const dispatch=useDispatch();
@@ -50,7 +50,7 @@ import Message from "../Components/Message";
     
     return( 
         <>
-        <Link to='/admin/userlist'>Go Back</Link>
+        <Link to='/admin/userlist' className="btn btn-light my-3">Go Back</Link>
          <FormContainer>
         <h1> Edit user</h1>
         {loadingUpdate&&<Loader/>}
@@ -83,6 +83,7 @@ import Message from "../Components/Message";
         <Form.Check
         type='checkbox'
          label="Is Admin"
+     
           checked={isAdmin}
         onChange={(e)=>setIsAdmin(e.target.checked)}
         >

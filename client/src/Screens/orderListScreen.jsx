@@ -13,7 +13,7 @@ const OrderListScreen=()=>{
 
     const orderList=useSelector(state=>state.orderList)
     const {loading,error,orders}=orderList
-    console.log(orders)
+    console.log(orderList)
 
     
 
@@ -35,13 +35,13 @@ const OrderListScreen=()=>{
   return(
      <>
   
-      
+       <h1>Orders</h1>
         {
         loading?<Loader />:error?<Message variant='danger'></Message>:(
        <Table striped bordered hover responsive className="table-sm">
            <thead>
                <tr>
-                   
+                   <th>ID</th>
                    <th>USER</th>
                    <th>DATE</th>
                    <th>TOTAL</th>
@@ -53,21 +53,22 @@ const OrderListScreen=()=>{
            <tbody>
                {loading&&<Loader />}
                {error&&<Message variant='danger'>{error}</Message>}
-        {orders&&orders.map((order)=>(
+        {orders.length!==0&&orders.map((order)=>(
                    <tr key={order._id}>
-                       <td>{orders.user&&order.user.name}</td>
+                       <td>{order._id}</td>
+                       <td>{order.user&&order.user.name}</td>
                      
-                       <td>{orders && order.createdAt.substring(0,10)}</td>
-                       <td>${orders&&order.totalPrice}</td>
+                       <td>{ (orders.length!==0)&&order.createdAt.substring(0,10)}</td>
+                       <td>${order.totalPrice}</td>
                        <td>
-                       {orders&&order.isPaid?(order.paidAt.substring(0,10)):(
+                       {(orders.length!==0)&&order.isPaid?(order.paidAt.substring(0,10)):(
                              <i className='fas fa-times' style={{color:'red'}}></i>
                            )
                            }
                            
                        </td>
                        <td>
-                       {orders&&order.isDelivered?(order.deliveredAt.substring(0,10)):(
+                       {(orders.length!==0)&&order.isDelivered?(order.deliveredAt.substring(0,10)):(
                              <i className='fas fa-times' style={{color:'red'}}></i>
                            )
                            }

@@ -3,7 +3,7 @@ import {Table,Form,Button,Row,Col} from "react-bootstrap";
 import {useDispatch,useSelector} from "react-redux";
 import{useLocation,useSearchParams,Link,useNavigate} from "react-router-dom";
 import { getUserDetails, updateUserProfile } from "../Actions/userActions";
-import { listMyOrders } from "../Actions/orderActions";
+import { listMyOrders, listOrders } from "../Actions/orderActions";
 import Loader from "../Components/loader";
 import Message from "../Components/Message";
 import {LinkContainer} from 'react-router-bootstrap'
@@ -14,19 +14,19 @@ import {LinkContainer} from 'react-router-bootstrap'
     const[password,setPassword]=useState('');
     const[confirmPassword,setConfirmPassword]=useState('');
 
-   const[message,setMessage]=useState('');
+    const [us,setUs]=useState(true)
+
+   const[message,setMessage]=useState(null);
 
   const dispatch=useDispatch();
 
+  const userDetails=useSelector((state)=>state.userDetails);
+  const {loading,error,user}=userDetails;
+ 
 
   const orderMyList=useSelector((state)=>state.orderMyList);
   const {loading:loadingOrders,error:errorOrders,orders}=orderMyList;
-
-
-
-  const userDetails=useSelector((state)=>state.userDetails);
-  const {loading,error,user}=userDetails;
-
+   console.log(orderMyList)
 
   const userUpdateProfile=useSelector((state)=>state.userUpdateProfile);
   const {success}=userUpdateProfile;
@@ -34,7 +34,7 @@ import {LinkContainer} from 'react-router-bootstrap'
   const userLogin=useSelector((state)=>state.userLogin);
   const {userInfo}=userLogin;
   
-
+console.log(user)
    const navigate=useNavigate();
   
    useEffect(()=>{
@@ -44,21 +44,24 @@ import {LinkContainer} from 'react-router-bootstrap'
      navigate("/login")
      }
      else{
-         if(!user.name)
-         {          
+         if(Object.keys(user).length===0)
+         {       console.log("abhi")    
              dispatch(getUserDetails('profile'))
-             dispatch(listMyOrders())
+              dispatch(listMyOrders())
+
              
-             
+            
          }
          else{
              setName(user.name);
              setEmail(user.email);
          }
+         
+         
      }
      
      
-   },[dispatch,navigate,userInfo,user,])  
+   },[dispatch,navigate,userInfo,user,us])  
 
    const submitHandler=(e)=>{
     e.preventDefault();
@@ -73,14 +76,14 @@ import {LinkContainer} from 'react-router-bootstrap'
    
     return( 
         <>
-        {(!loadingOrders)&&
+      
         <Row>
             <Col md={3}>
             <h1>User profile</h1>
-          
-        {
+            {message&&<Message variant='danger'>{message}</Message>}
+           {
           error&&<Message variant="danger" >{error}</Message>
-        }
+           }
         
            {success &&<Message variant='success'>Profile Updated</Message>}
         
@@ -133,11 +136,11 @@ import {LinkContainer} from 'react-router-bootstrap'
       </Button>
         </Form>
                 </Col>
-                {(!loadingOrders)&&(
+               
                 <Col md={9}>
                   <h2>My Orders</h2>
                   {loadingOrders?<Loader />:errorOrders?<Message variant='danger'>{errorOrders}</Message>:(
-                    <Table striped borered  hover responsive className="table-sm">
+                    <Table striped bordered  hover responsive className="table-sm">
                       <thead>
                         <tr>
                         <th>ID</th>
@@ -149,7 +152,8 @@ import {LinkContainer} from 'react-router-bootstrap'
                           </tr>
                       </thead>
                       <tbody>
-                        {orders&&orders.map((order)=>(<tr key={order._id}>
+                        {orders.map((order)=>(
+                        <tr key={order._id}>
                           <td>{order._id}</td>
                           <td>{order.createdAt.substring(0,10)}</td>
                           <td>{order.totalPrice}</td>
@@ -157,7 +161,7 @@ import {LinkContainer} from 'react-router-bootstrap'
                           <td>{order.isDelivered?order.deliveredAt.substring(0,10):(<i className="fas fa-times" style={{color:"red"}}></i>)}</td>
                           <td>
                             <LinkContainer to={`/order/${order._id}`}>
-                              <Button variant='light'>Details</Button>
+                              <Button  className='btn-sm' variant='light'>Details</Button>
                             </LinkContainer>
                           </td>
                         </tr>))}
@@ -166,11 +170,10 @@ import {LinkContainer} from 'react-router-bootstrap'
                   )}
                 </Col>
                 )
-  }
                 
         </Row>
       
-}
+
       
 
     </>

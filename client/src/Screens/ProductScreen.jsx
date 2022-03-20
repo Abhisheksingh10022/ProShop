@@ -144,10 +144,10 @@ return(
                                 setRating(e.target.value)}>
                                     <option value=''>Select...</option>
                                     <option value='1'>1 - Poor</option>
-                                    <option value='1'>2 - Fair</option>
-                                    <option value='1'>3 - Good</option>
-                                    <option value='1'>4 - very Good</option>
-                                    <option value='1'>5 - Excellent</option>
+                                    <option value='2'>2 - Fair</option>
+                                    <option value='3'>3 - Good</option>
+                                    <option value='4'>4 - very Good</option>
+                                    <option value='5'>5 - Excellent</option>
                                 </Form.Control>
                             </Form.Group>
                             <Form.Group controlId=" comment">

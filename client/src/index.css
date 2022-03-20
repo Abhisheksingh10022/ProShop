@@ -12,9 +12,7 @@ h2{
   font-size: 1.4rem;
   padding: 0.5em ;
 }
-.rating span{
-  margin:0.1rem;
-}
+
 .carousel-item-next,
 .carousel-item-prev,
 .carousel-item.active{

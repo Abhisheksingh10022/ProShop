@@ -14,7 +14,7 @@ import {LinkContainer} from 'react-router-bootstrap'
     const[password,setPassword]=useState('');
     const[confirmPassword,setConfirmPassword]=useState('');
 
-    const [us,setUs]=useState(true)
+
 
    const[message,setMessage]=useState(null);
 
@@ -38,7 +38,6 @@ console.log(user)
    const navigate=useNavigate();
   
    useEffect(()=>{
-   
      if(!userInfo)
      {
      navigate("/login")
@@ -61,7 +60,7 @@ console.log(user)
      }
      
      
-   },[dispatch,navigate,userInfo,user,us])  
+   },[dispatch,navigate,userInfo,user])  
 
    const submitHandler=(e)=>{
     e.preventDefault();

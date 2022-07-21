@@ -13,7 +13,7 @@ const OrderListScreen=()=>{
 
     const orderList=useSelector(state=>state.orderList)
     const {loading,error,orders}=orderList
-    console.log(orderList)
+    console.log(orders)
 
     
 
@@ -30,12 +30,11 @@ const OrderListScreen=()=>{
          else{
              navigate('/login')
          }
-     },[dispatch,userInfo,navigate])
+     },[dispatch,navigate,userInfo])
 
   return(
-     <>
-  
-       <h1>Orders</h1>
+    <>
+        <h1>orders</h1>
         {
         loading?<Loader />:error?<Message variant='danger'></Message>:(
        <Table striped bordered hover responsive className="table-sm">
@@ -47,28 +46,24 @@ const OrderListScreen=()=>{
                    <th>TOTAL</th>
                    <th>PAID</th>
                    <th>DELIVERED</th>
-                   <th></th>
                </tr>
            </thead>
            <tbody>
-               {loading&&<Loader />}
-               {error&&<Message variant='danger'>{error}</Message>}
-        {orders.length!==0&&orders.map((order)=>(
+               {orders.map(order=>(
                    <tr key={order._id}>
                        <td>{order._id}</td>
                        <td>{order.user&&order.user.name}</td>
-                     
-                       <td>{ (orders.length!==0)&&order.createdAt.substring(0,10)}</td>
-                       <td>${order.totalPrice}</td>
+                       <td>{order.createdAt.substring(0,10)}</td>
+                       <td>{order.totalPrice}</td>
                        <td>
-                       {(orders.length!==0)&&order.isPaid?(order.paidAt.substring(0,10)):(
+                           {order.isPaid?(order.paidAt.substring(0,10)):(
                              <i className='fas fa-times' style={{color:'red'}}></i>
                            )
                            }
                            
                        </td>
                        <td>
-                       {(orders.length!==0)&&order.isDelivered?(order.deliveredAt.substring(0,10)):(
+                           {order.isdelivered?(order.deliveredAt.substring(0,10)):(
                              <i className='fas fa-times' style={{color:'red'}}></i>
                            )
                            }
@@ -80,6 +75,7 @@ const OrderListScreen=()=>{
                              Details
                            </Button>
                            </LinkContainer>
+                           
                        </td>
 
                    </tr>
@@ -88,9 +84,7 @@ const OrderListScreen=()=>{
        </Table>
         )
         }
-    
-
-      </>
+        </>
   )
     }
 export default OrderListScreen;

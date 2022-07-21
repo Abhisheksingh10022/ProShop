@@ -104,9 +104,9 @@ const getOrders  =AsyncHandler(async(req,res)=>{
 })
 
 
-//@des  update order to paid
-//@route GET /api/orders/myorders
-//@access private
+//@des  update order to Delivered
+//@route GET /api/orders/:id/delivered
+//@access private/Admin
 
 const updateOrderToDelivered =AsyncHandler(async(req,res)=>{
     const id=req.params.id;
@@ -125,4 +125,5 @@ const updateOrderToDelivered =AsyncHandler(async(req,res)=>{
    }
        
 })
+
 export {updateOrderToDelivered,getOrders,addOrderItems,getOrderById,updateOrderToPaid,getMyOrders};

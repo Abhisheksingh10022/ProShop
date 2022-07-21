@@ -82,7 +82,7 @@ orders.itemsPrice=addDecimals(orders.orderItems.reduce((acc,item)=>acc+item.pric
            }
        }
       
-   },[orders,dispatch,id,successDeliver,navigate,successPay])
+   },[orders,dispatch,id,successDeliver,navigate,successPay,userInfo])
 
 
    const successPaymentHandler=(paymentResult)=>{
@@ -193,7 +193,7 @@ dispatch(payOrder(id,paymentResult))
                    </ListGroup.Item>
                )}
                {loadingDeliver&&<Loader />}
-               { userInfo.isAdmin && orders.isPaid && !orders.isDelivered&&(
+               {userInfo&& userInfo.isAdmin && orders.isPaid && !orders.isDelivered&&(
                    <ListGroup.Item>
                        <Button type='button' className='btn btn-block' onClick={deliverHandler}>Mark As Delivered</Button>
                    </ListGroup.Item>
